@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <doclet-version-NOT-library-version>1.07</doclet-version-NOT-library-version>
+    <class>
+        <name>my.b4a.randomaccess.addoAsyncStreams</name>
+        <shortname>addoAsyncStreams</shortname>
+        <owner>process</owner>
+        <event>NewData (Buffer() As Byte)</event>
+        <event>Error</event>
+        <event>Terminated</event>
+        <event>NewStream (Dir As String, FileName As String)</event>
+        <method>
+            <name>Write</name>
+            <comment>Adds the given bytes array to the output stream queue.
+If the object was initialized with InitializePrefix then the array length will be added before the array.
+Returns False if the queue is full and it is not possible to queue the data.</comment>
+            <returntype>boolean</returntype>
+            <parameter>
+                <name>Buffer</name>
+                <type>byte[]</type>
+            </parameter>
+        </method>
+        <method>
+            <name>StopWithoutClosingStreams</name>
+            <comment>Stops AsyncStreams without closing the underlying streams. This is useful for cases such as STARTTLS implementations.
+ The underlying streams must be configured with a read timeout and ContinueAfterTimeout should be set to True.
+Note that it only works in non-prefix mode.</comment>
+            <returntype>void</returntype>
+        </method>
+        <method>
+            <name>InitializePrefix</name>
+            <comment>Initializes the object and sets it in "prefix" mode. In this mode incoming data should adhere to the following protocol:
+Every message begins with the message length as an Int value (4 bytes). This length should not include the additional 4 bytes.
+The NewData event will be raised only with full messages (not including the 4 bytes length value).
+The prefix Int value will be added to the output messages automatically.
+This makes it easier as you do not need to deal with broken messages.
+In - The InputStream that will be read. Pass Null if you only want to write with this object.
+BigEndian - Whether the length value is encoded in BigEndian or LittleEndian. 
+Out - The OutputStream that is used for writing the data. Pass Null if you only want to read with this object.
+EventName - Determines the Subs that handle the NewData and Error events.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>ba</name>
+                <type>anywheresoftware.b4a.BA</type>
+            </parameter>
+            <parameter>
+                <name>In</name>
+                <type>java.io.InputStream</type>
+            </parameter>
+            <parameter>
+                <name>BigEndian</name>
+                <type>boolean</type>
+            </parameter>
+            <parameter>
+                <name>Out</name>
+                <type>java.io.OutputStream</type>
+            </parameter>
+            <parameter>
+                <name>EventName</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+        <method>
+            <name>SendAllAndClose</name>
+            <comment>Sends a message to the internal queue. AsyncStreams will be closed when the message is processed.
+The Terminated event will be raised.
+Returns False if the queue is full or the connection is not open.</comment>
+            <returntype>boolean</returntype>
+        </method>
+        <method>
+            <name>WriteStream</name>
+            <comment>Writes the given stream. This method is only supported in prefix mode.
+The checksum will be calculated and sent to the other size. The NewStream event will be raised, in the receiving side, after the stream was received successfully.
+This method is more efficient than sending the same data in chunks. It can handle streams of any size.
+In - InputStream that will be read. Note that the InputStream will be closed after the stream is sent.
+Size - Number of bytes to read from the stream.</comment>
+            <returntype>boolean</returntype>
+            <parameter>
+                <name>In</name>
+                <type>java.io.InputStream</type>
+            </parameter>
+            <parameter>
+                <name>Size</name>
+                <type>java.lang.Long</type>
+            </parameter>
+        </method>
+        <method>
+            <name>Close</name>
+            <comment>Closes the associated streams.</comment>
+            <returntype>void</returntype>
+        </method>
+        <method>
+            <name>IsInitialized</name>
+            <comment>Tests whether this object has been initialized.</comment>
+            <returntype>boolean</returntype>
+        </method>
+        <method>
+            <name>Initialize</name>
+            <comment>Initializes the object. Unlike in prefix mode, the NewData event will be raised with new data as soon as it is available.
+In - The InputStream that will be read. Pass Null if you only want to write with this object.
+Out - The OutputStream that is used for writing the data. Pass Null if you only want to read with this object.
+EventName - Determines the Subs that handle the NewData and Error events.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>ba</name>
+                <type>anywheresoftware.b4a.BA</type>
+            </parameter>
+            <parameter>
+                <name>In</name>
+                <type>java.io.InputStream</type>
+            </parameter>
+            <parameter>
+                <name>Out</name>
+                <type>java.io.OutputStream</type>
+            </parameter>
+            <parameter>
+                <name>EventName</name>
+                <type>java.lang.String</type>
+            </parameter>
+        </method>
+        <method>
+            <name>Write2</name>
+            <comment>Adds the given bytes array to the output stream queue.
+If the object was initialized with InitializePrefix then the array length will be added before the array.
+Returns False if the queue is full and it is not possible to queue the data.</comment>
+            <returntype>boolean</returntype>
+            <parameter>
+                <name>Buffer</name>
+                <type>byte[]</type>
+            </parameter>
+            <parameter>
+                <name>Start</name>
+                <type>int</type>
+            </parameter>
+            <parameter>
+                <name>Length</name>
+                <type>int</type>
+            </parameter>
+        </method>
+        <property>
+            <name>StreamTotal</name>
+            <returntype>long</returntype>
+            <comment>Returns the total number of bytes of the currently received file. Only valid in prefix mode.</comment>
+        </property>
+        <property>
+            <name>StreamReceived</name>
+            <returntype>long</returntype>
+            <comment>Returns the number of bytes of the currently received file. Only valid in prefix mode.</comment>
+        </property>
+        <property>
+            <name>OutputQueueSize</name>
+            <returntype>int</returntype>
+            <comment>Returns the number of messages waiting in the output queue.</comment>
+        </property>
+        <field>
+            <name>ContinueAfterTimeout</name>
+            <comment></comment>
+            <returntype>boolean</returntype>
+        </field>
+        <field>
+            <name>StreamFolder</name>
+            <comment>Received streams will be saved in this folder.</comment>
+            <returntype>java.lang.String</returntype>
+        </field>
+    </class>
+    <version>1.0</version>
+</root>
