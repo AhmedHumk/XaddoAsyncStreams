@@ -304,9 +304,13 @@ public class addoAsyncStreams {
 
 			} catch (Exception e) {
 				if (working) {
-					e.printStackTrace();
-					ba.setLastException(e);
-					ba.raiseEventFromDifferentThread(addoAsyncStreams.this, null, 0, eventName + "_error", false, null);
+					if (e.getMessage().equals("Connection reset")) {
+						// show Nothing
+					} else {
+						e.printStackTrace();
+						ba.setLastException(e);
+						ba.raiseEventFromDifferentThread(addoAsyncStreams.this, null, 0, eventName + "_error", false, null);
+					}
 				}
 			}
 
@@ -402,9 +406,13 @@ public class addoAsyncStreams {
 					}
 				} catch (Exception e) {
 					if (working) {
-						e.printStackTrace();
-						ba.setLastException(e);
-						ba.raiseEventFromDifferentThread(addoAsyncStreams.this, null, 0, eventName + "_error", false, null);
+						if (e.getMessage().equals("Broken pipe (Write failed)")) {
+							// show nothing
+						} else {
+							e.printStackTrace();
+							ba.setLastException(e);
+							ba.raiseEventFromDifferentThread(addoAsyncStreams.this, null, 0, eventName + "_error", false, null);
+						}
 					}
 				}
 			}
