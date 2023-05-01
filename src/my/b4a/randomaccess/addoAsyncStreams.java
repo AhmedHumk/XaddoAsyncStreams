@@ -79,8 +79,9 @@ public class addoAsyncStreams {
 		return streamReceived;
 	}
 	private void shared(BA ba, InputStream In, OutputStream Out, String EventName, boolean BigEndian, boolean Prefix) throws IOException {
-		if (IsInitialized())
+		if (IsInitialized()) {
 			Close();
+		}
 		this.ba = ba;
 		this.eventName = EventName.toLowerCase(BA.cul);
 		if (In != null) {
